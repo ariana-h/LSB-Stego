@@ -20,6 +20,7 @@ class SaveBestModel(Callback):
         self.save_best_only = save_best_only
         self.best_val_acc = 0.0
         self.best_val_loss = float('inf')
+        self.model_saved = False  # Track if the model has been saved at least once
 
     def on_epoch_end(self, epoch, logs=None):
         val_acc = logs.get('val_accuracy')
@@ -33,7 +34,13 @@ class SaveBestModel(Callback):
             self.best_val_loss = val_loss
             print(f"\nValidation Accuracy: {val_acc:.4f} improved and Validation Loss: {val_loss:.4f} < 1.0. Saving model...")
             self.model.save(self.filepath, overwrite=True)
+            self.model_saved = True
             print("Model saved!")
+
+        # Stop training if validation loss exceeds 1.0 after the model has been saved at least once
+        if self.model_saved and val_loss > 1.0:
+            print(f"\nValidation Loss: {val_loss:.4f} exceeded 1.0. Stopping training...")
+            self.model.stop_training = True
 
 
 def read_image(image_path):
@@ -59,7 +66,7 @@ X_train, X_test, y_train, y_test = train_test_split(images, labels, test_size=0.
 
 def unet_model(input_shape):
     inputs = layers.Input(shape=input_shape)
-
+    
     # Downsampling (Encoder)
     conv1 = layers.Conv2D(32, (3, 3), padding='same')(inputs)
     leaky_relu1 = layers.LeakyReLU(alpha=0.2)(conv1)
@@ -114,6 +121,7 @@ def unet_model(input_shape):
 
     return model
 
+
 input_shape = (IMAGE_SIZE[0], IMAGE_SIZE[1], 3)
 model = unet_model(input_shape)
 
@@ -146,7 +154,7 @@ print('----------------------------------------')
 print(f'Validation accuracy: {val_acc}')
 print(f'Validation precision: {val_precision}')
 print(f'Validation recall: {val_recall}')
-print(f'ROC AUC score: {roc_auc}')
+print(f'ROC AUC: {roc_auc}')
 
 # Plot ROC curve
 plt.figure(figsize=(8, 6))
