@@ -1,12 +1,8 @@
-# Decoding the Invisible: AI Capabilities in Image Steganography
-Ariana Huhko  
-Undergraduate Computer Science Capstone  
-Capstone Advisor: Dr. Michael J. Reale  
-SUNY Polytechnic Institute  
-Spring 2024
+# Decoding the Invisible: Leveraging a Modified U-Net Architecture to Detect Image Steganography
+***Author:* Ariana Huhko, SUNY Polytechnic Institute**  
 
 ## Objective
-The goal is to employ widely available techniques and customized AI models for embedding secret data within images using image steganography. Further, this project aims to explore AI's role in cybersecurity, particularly in the area of image steganalysis, to determine whether a network can detect the presence of hidden data within a carrier image (the resulting image after steganography has been applied). This will involve assessing the network's accuracy in detecting hidden messages with the methods used and attempting to decode the embedded data when feasible.
+This project aims to explore AI's role in cybersecurity, particularly in the area of image steganalysis, to determine whether a network can detect the presence of hidden data within a carrier image (the resulting image after steganography has been applied). A customized U-Net architecture was developed to identify messages embedded via LSB encoding, using a PNG image dataset. The model leverages robust feature extraction and anomaly detection capabilities to enhance detection performance. We assess the network's accuracy in detecting hidden messages with the methods used and decode the embedded data as necessary.
 
 ## Datasets
 The images used for the Basic LSB Encoder and Decoder were personally obtained.
@@ -22,10 +18,10 @@ Run the following scripts in order:
 - `BasicLSBDecoder.py`
 
 **Original:**  
-![alt text](example/2.JPG)  
+![alt text](example/original.JPG)  
 
 **Encoded:**  
-![alt text](example/2.png)
+![alt text](example/encoded.png)
 
 ## Preprocess Data
 Download a dataset of images or use the one referenced for this project at https://www.kaggle.com/datasets/pankajkumar2002/random-image-sample-dataset. Unzip the dataset into your current repository. You should now see a `data` folder in your repository.
@@ -76,7 +72,7 @@ To install tensorflow:
 Find the folder where your environment is located (can be found by running `conda env list` in your terminal). Inside this folder, under `etc\conda\activate.d`, create a file `env_vars.bat`. If the folder path does not exist under your environment, copy this to a different file and move it in.
 
 >@echo off
-for /f "delims=" %%a in ('python -c "import nvidia.cudnn;print(nvidia.cudnn.__file__)"') do @set CUDNN_FILE=%%a
+for /f "delims=" %%a in ('python -c "import nvidia.cudnn;print(nvidia.cudnn.\_\_file\_\_)"') do @set CUDNN_FILE=%%a
 for %%F in ("%CUDNN_FILE%") do set CUDNN_PATH=%%~dpF
 set PATH=%CUDNN_PATH%\bin;%PATH%
 
@@ -88,7 +84,7 @@ GPU devices should be listed as such:
 
 `[PhysicalDevice(name='/physical_device:GPU:0', device_type='GPU')]`
 
-Install additional dependencies/libraries as promtped:
+Install additional dependencies/libraries as prompted:
 
 - `pip install nltk`
 - `pip install opencv-python`
